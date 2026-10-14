@@ -1,0 +1,335 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="Mrphs-html ">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <title>Activitats</title>
+    <link href="/library/skin/default-skin/portal.css?version=260921" type="text/css" rel="stylesheet" media="screen, tty, tv, handheld, projection" />
+<link href="/library/skin/tool_base.css?version=260921" type="text/css" rel="stylesheet" media="screen, tty, tv, handheld, projection" />
+<link href="/library/skin/default-skin/tool.css?version=260921" type="text/css" rel="stylesheet" media="screen, tty, tv, handheld, projection" />
+<link href="/library/skin/default-skin/print.css?version=260921" type="text/css" rel="stylesheet" media="print" />
+<link href="/library/skin/default-skin/properties.css?version=260921" type="text/css" rel="stylesheet" media="screen, tty, tv, handheld, projection" />
+<script type="text/javascript" src="/library/js/headscripts.js?version=260921"></script>
+<script src="/library/webjars/momentjs/2.29.4/min/moment-with-locales.min.js?version=260921"></script>
+<script type="module" src="/webcomponents/bundles/sakai-date-picker.js?version=?version=260921"></script><script type="text/javascript">var sakai = sakai || {}; sakai.editor = sakai.editor || {}; sakai.editor.editors = sakai.editor.editors || {}; sakai.editor.editors.ckeditor = sakai.editor.editors.ckeditor || {}; sakai.locale = sakai.locale || {};
+sakai.locale.userCountry = 'ES';
+sakai.locale.userLanguage = 'ca';
+sakai.locale.userLocale = 'ca_ES';
+sakai.editor.collectionId = '/group/course-101/';
+sakai.editor.enableResourceSearch = false;
+sakai.editor.contentItemUrl = '/portal/tool/831df6da-2ae0-4f2d-bc0d-095cb848e795/sakai.lti.admin.helper.helper?panel=CKEditor';
+sakai.editor.siteToolSkin = '/library/skin/default-skin/tool.css';
+sakai.editor.sitePrintSkin = '/library/skin/default-skin/print.css';
+sakai.editor.sitePropertiesSkin = '/library/skin/default-skin/properties.css';
+sakai.editor.editors.ckeditor.browser = 'elfinder';
+</script>
+<script type="text/javascript">var CKEDITOR_BASEPATH='/library/webjars/ckeditor4/4.22.1/';
+</script>
+<script type="text/javascript" src="/library/webjars/ckeditor4/4.22.1/ckeditor.js?version=260921"></script>
+<script type="text/javascript" src="/library/editor/ckeditor.launch.js?version=260921"></script>
+
+<script type="text/javascript">includeLatestJQuery("assignment_chef_header");</script>
+<script type="text/javascript" src="/sakai-assignment-tool/js/assignments.js?version=260921"></script>
+<script type="text/javascript" src="/library/js/spinner.js?version=260921"></script>
+<script type="text/javascript">includeWebjarLibrary("bootstrap-multiselect");</script>
+<script type="text/javascript">includeWebjarLibrary("momentjs");</script>
+  </head>
+  <body  onload="setMainFrameHeight('Main21caee61x724ex4adbx95efx8f7e6419d9d9');setFocus(focus_path);"   class="Mrphs-container Mrphs-sakai-assignment-grades"  >
+<!-- start: chef_assignments_student_view_submission.vm  -->
+    	<script type="module" src="/webcomponents/bundles/rubric-association-requirements.js?version=260921"></script>
+
+<script>
+$(document).ready(function(){
+    $('#submissionFileCount').val(1);
+    $('#addMoreAttachmentControls').click(function(e){
+        e.preventDefault();
+        if ($('#submissionFileCount').val() < 5) {
+            var $input = $('#clonableUpload').clone().removeAttr('id').addClass('cloned').appendTo('#clonedHolder').children('input');
+            $input.val('');
+            var $count = $('#submissionFileCount').val();
+            var $nameCount = "upload"+$count;
+            $input.attr("name", $nameCount);
+            $('#submissionFileCount').val(parseInt($('#submissionFileCount').val(), 10) + 1);
+            if ($('#submissionFileCount').val() == 5) {
+                $('#addMoreAttachmentControls').hide();
+                $('#addMoreAttachmentControlsInactive').show();
+            }
+        }
+        $('.cloned a').show();
+        ASN.resizeFrame('grow');
+    });
+    $('body').on('rubrics-grading-loaded', e => {
+        const studentSelfReportMode = -1;
+        switch (studentSelfReportMode) {
+            // The student has to select a criteria on every criterion
+            case 0:
+            default:
+                if($('sakai-rubric-grading').length) {
+                    $('body').on('rubric-ratings-changed', e => {
+                        const criterionRatingsLength = $('sakai-rubric-grading').find('.criterion-ratings').length;
+                        const ratingsSelected = $('sakai-rubric-grading').find('.rating-item.selected').length;
+                        if (ratingsSelected === criterionRatingsLength) {
+                            disableSubmitButtons(false);
+                        } else {
+                            disableSubmitButtons(true);
+                        }
+                    });
+                }
+                break;
+
+            // The student has to select at least one criteria in one criterion
+            case 1:
+                if($('sakai-rubric-grading').length) {
+                    $('body').on('rubric-ratings-changed', e => {
+                        const ratingsSelected = $('sakai-rubric-grading').find('.rating-item.selected').length;
+                        if (ratingsSelected > 0) {
+                            disableSubmitButtons(false);
+                        } else {
+                            disableSubmitButtons(true);
+                        }
+                    });
+                }
+                break;
+
+            // The student is not required to select any criteria
+            case 2:
+                disableSubmitButtons(false);
+                break;
+        }
+    });
+
+    function disableSubmitButtons(disabled) {
+        document.getElementById('confirm').disabled = disabled;
+        document.getElementById('preview').disabled = disabled;
+        document.getElementById('save').disabled = disabled;
+    }
+
+});
+</script>
+	<script src="/sakai-assignment-tool/js/studentViewSubmission.js?version=260921"></script>
+
+<div class="portletBody">
+
+		
+	
+										<h3>Activitat
+																	<span class="highlight">
+						 	- En curs
+							</span>
+										</h3>
+																											<p class="instruction">
+									 Empleneu el formulari i feu clic al botó que correspongui per finalitzar.
+											</p>	
+						<div id="StudentAssignmentCurrent">
+		<div class="itemSummary">
+			<div class="row">
+				<div class="col-lg-4 col-sm-6 col-xs-12">
+					<div class="itemSummaryHeader">Títol</div>
+				</div>
+				<div class="col-lg-4 col-sm-6 col-xs-12">
+					<div class="itemSummaryValue">
+						Pr&aacute;ctica 2: Ejemplo
+						                <span class="si si-attachment" aria-hidden="true"></span>
+        <span class="sr-only">Aquesta activitat inclou fitxers adjunts</span>
+        											</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-4 col-sm-6 col-xs-12">
+					<div class="itemSummaryHeader">Límit</div>
+				</div>
+								<div class="col-lg-4 col-sm-6 col-xs-12">
+					<div class="itemSummaryValue">
+													20 de des. 2026 23:59
+											</div>
+				</div>
+			</div>
+										<div class="row">
+					<div class="col-lg-4 col-sm-6 col-xs-12">
+						<div class="itemSummaryHeader">Número de reenviaments de lliuraments permesos</div>
+					</div>
+					<div class="col-lg-4 col-sm-6 col-xs-12">
+						<div class="itemSummaryValue">
+							 3 						</div>
+					</div>
+				</div>
+													<div class="row">
+						<div class="col-lg-4 col-sm-6 col-xs-12">
+							<div class="itemSummaryHeader">Accepta reenviaments de lliuraments fins</div>
+						</div>
+						<div class="col-lg-4 col-sm-6 col-xs-12">
+							<div class="itemSummaryValue">
+								20 de des. 2026 23:59
+							</div>
+						</div>
+					</div>
+																					<div class="row">
+					<div class="col-lg-4 col-sm-6 col-xs-12">
+						<div class="itemSummaryHeader">Estat</div>
+					</div>
+					<div class="col-lg-4 col-sm-6 col-xs-12">
+						<div class="itemSummaryValue">
+															No s’ha iniciat
+													</div>
+					</div>
+				</div>
+													<div class="row">
+					<div class="col-lg-4 col-sm-6 col-xs-12">
+						<div class="itemSummaryHeader">Escala de qualificacions</div>
+					</div>
+					<div class="col-lg-4 col-sm-6 col-xs-12">
+						<div class="itemSummaryValue">
+							Punts
+															(màxim 11,00)
+							
+							<!--for grading via an external scoring service, if enabled for an associated gradebook item -->
+													</div>
+					</div>
+				</div>
+																<div class="row">
+					<div class="col-lg-4 col-sm-6 col-xs-12">
+						<div class="itemSummaryHeader">Modificat pel tutor</div>
+					</div>
+					<div class="col-lg-4 col-sm-6 col-xs-12">
+						<div class="itemSummaryValue">
+							19 de set. 2026 12:17
+						</div>
+					</div>
+				</div>
+						
+						
+		</div>
+		<div class="clearfix"></div>
+		<h4>
+			Instruccions
+		</h4>
+		
+					<div class="textPanel"><p>Sube un archivo comprimido con el código y una memoria en PDF.</p></div>
+		
+				            <h4>Recursos addicionals per a l’activitat</h4>
+                                        <ul class="attachList">
+                                                                                        <li>
+                                                                    <img src = "/library/image/sakai/compressed.gif?panel=Main" border="0" alt="Fitxer adjunt" />
+                                                                                                    <a href="https://sakai.example.edu/access/content/attachment/course-101/Actividades/7e18c487-7afb-4856-8c7e-9552851b754b/codigo_base.zip" target="_blank">codigo_base.zip</a>
+                                                                    <span class="textPanelFooter">(
+            287 KB;
+        19 de set. 2026 12:15
+    )</span>
+                            </li>
+                                                                                                                                    <li>
+                                                                    <img src = "/library/image/sakai/pdf.gif?panel=Main" border="0" alt="Fitxer adjunt" />
+                                                                                                    <a href="https://sakai.example.edu/access/content/attachment/course-101/Actividades/d975f67b-7ab3-4565-96f5-2a2d508c07aa/enunciado.pdf" target="_blank">enunciado.pdf</a>
+                                                                    <span class="textPanelFooter">(
+            294 KB;
+        19 de set. 2026 12:15
+    )</span>
+                            </li>
+                                                                        </ul>
+            
+			<script>
+		$(document).ready(function(){
+			ASN.setupToggleAreas('toggleAnchor', 'toggledContent', false, 'fast');
+		});
+	</script>
+						
+				<sakai-rubric-student-preview-button
+			site-id="course-101"
+			tool-id="sakai.assignment.grades"
+			entity-id="38f72308-a093-4c77-a16c-f67e591bbc22">
+		</sakai-rubric-student-preview-button>
+		
+		
+				<hr class="itemSeparator" />
+					<h3>Lliurament</h3> 
+		
+				
+					<form name="addSubmissionForm" id="addSubmissionForm" action="https://sakai.example.edu/portal/tool/21caee61-724e-4adb-95ef-8f7e6419d9d9?panel=Main" method="post" onsubmit="return true;" enctype="multipart/form-data" >
+		<input type="hidden" name="eventSubmit_doRead_add_submission_form" value="x" />
+		<input type="hidden" name="option" id="option" value="cancel" />
+		<input type="hidden" name="currentAttachment" value="" />
+		<input type="hidden" name="assignmentId" value="$assignmentReference" />
+		
+		
+											
+
+						
+														<h4>Text de l’activitat</h4>
+							<p class="instruction">
+																								Aquesta activitat admet lliuraments usant l’editor de text i també adjuntant fitxers. Introduïu el lliurament al quadre de text i/o useu el botó de navegar o el de seleccionar fitxers per incloure altres documents. <b>No oblideu d’anar desant sovint els canvis que feu</b> 
+																																				</p>
+							                        				<input type="hidden" id="ckeditor-autosave-context" name="ckeditor-autosave-context" value="asn_student_view">
+                        				<input type="hidden" id="ckeditor-autosave-entity-id" name="ckeditor-autosave-entity-id" value="38f72308-a093-4c77-a16c-f67e591bbc22">
+							<table border="0">
+								<tr>
+									<td>
+										<textarea cols="80" rows="30" wrap="virtual" name="Assignment.view_submission_text" id="Assignment.view_submission_text"  ></textarea>						
+														<script>sakai.editor.launch('Assignment.view_submission_text');</script>	
+										</td>
+								</tr>
+							</table>
+																														
+							
+						
+																								<div id="attachmentspanel" class="highlightPanel">
+					<h3 style="margin-top:0;margin-bottom:.5em">
+													Fitxers adjunts
+											</h3>	
+											<p class="instruction">
+															Encara no hi ha fitxers adjunts.
+													</p>
+																<div class="highlightPanel specialLink" style="margin:0;padding-bottom:.5em;">
+																																										<input type="hidden" name="submissionFileCount" id="submissionFileCount" value="1"/>
+									<table border="0" cellpadding="0" cellspacing="0" class="listHier  centerLines" style="width:auto;margin:0">
+										<tr>
+											<td>
+												<span><label for="clonableUpload">Selecciona un fitxer de l’ordinador</label></span>
+											</td>
+											<td>
+												<div id="clonableUploadW spinnerBesideContainer"> 
+													<input type="file" name="upload" class="upload" id="clonableUpload"  onchange="SPNR.insertSpinnerAfter( this, null, null ); document.getElementById('addSubmissionForm').action='https://sakai.example.edu/portal/tool/21caee61-724e-4adb-95ef-8f7e6419d9d9?sakai_csrf_token=&amp;panel=Main&amp;sakai_action=doAttachUpload';ASN.submitForm( 'addSubmissionForm', null, null, null, 'attachmentspanel' );"/> 
+												</div>
+												</td>
+																																				<td>
+													<span class="navIntraToolLink">
+														<input class="disableme enabled" type="button" value="o selecciona fitxers de l’espai de treball o d’un espai" name="attach" id="attach" accesskey="a" 															onclick="SPNR.disableControlsAndSpin( this, null ); ASN.submitForm( 'addSubmissionForm', 'attach', null, null, 'attachmentspanel' ); return false;" />
+													</span>
+												</td>
+																						</tr>	
+										<tr>
+											<td></td>
+											<td id="clonedHolder"></td>
+											<td></td>
+										</tr>
+									</table>	
+									
+																					</div>
+																			</div>
+			
+																<div id="submitPanel"
+										 class="act">
+								<input type="button" class="active" name="confirm" accesskey="s" id="confirm" value="Continua"
+									onclick="SPNR.disableControlsAndSpin( this, null ); ASN.submitForm( 'addSubmissionForm', 'confirm', null, null ); return false;" 
+															/>
+																	<input class="disableme" type="button" name="preview" accesskey="v" id="preview" value="Mostra una vista prèvia"
+								onclick="SPNR.disableControlsAndSpin( this, null ); ASN.submitForm( 'addSubmissionForm', 'preview', null, null ); return false;" />
+							<input class="disableme" type="button" name="save" accesskey="d" id="save" value="Desa com a esborrany"
+								onclick="SPNR.disableControlsAndSpin( this, null ); ASN.submitForm( 'addSubmissionForm', 'save', null, null ); return false;" />
+																						<input class="disableme" type="button" name="cancel" accesskey="x" id="cancel" value="Cancel·la"
+									onclick="ASN_SVS.confirmDiscardOrSubmit( 'Assignment.view_submission_text', false ); return false;" />
+							
+                                                            <span class="sak-banner-warn">Recordeu-vos de desar els canvis o bé de continuar</span>
+                            								</div>
+						<div id="confirmationDialogue" class="act sak-banner-warn" style="display:none;">
+				Es descartaran els vostres canvis. Esteu segur de voler cancel·lar?
+				<input class="disableme" type="button" name="yes" accesskey="y" id="yes" value="Sí" onclick="SPNR.disableControlsAndSpin( this, null ); ASN.submitForm( 'addSubmissionForm', 'cancel', null, null );" />
+				<input class="active" type="button" name="no" accesskey="n" id="no" value="No" onclick="ASN_SVS.undoCancel();" />
+			</div>
+				<input type="hidden" name="sakai_csrf_token" value="CSRF-TOKEN" />
+	</form>
+		</div>
+</div>
+<!-- end: chef_assignments_student_view_submission.vm  -->
+</body></html>

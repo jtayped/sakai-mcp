@@ -1,0 +1,15 @@
+name: feature request
+description: a sakai tool or action you'd like to see
+labels: [enhancement]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: what you'd like to do
+      description: the task, and which sakai tool it uses (assignments, gradebook, forums, ...)
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: sakai version

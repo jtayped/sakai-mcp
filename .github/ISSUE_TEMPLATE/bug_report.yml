@@ -1,0 +1,33 @@
+name: bug report
+description: a tool fails or returns wrong data
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: never paste your password, session cookie or `JSESSIONID`. remove names and ids of other people from any output.
+  - type: input
+    id: tool
+    attributes:
+      label: tool
+      description: which tool, and the arguments you called it with
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: what happened
+      description: the error or the wrong result, and what you expected instead
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: sakai version
+      description: the `version` that `whoami` returns, if any
+  - type: dropdown
+    id: login
+    attributes:
+      label: login mode
+      options:
+        - username and password
+        - session cookie (sso)
