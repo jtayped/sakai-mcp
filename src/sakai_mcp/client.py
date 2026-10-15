@@ -16,12 +16,14 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 import httpx
+from mcp.server.mcpserver.exceptions import ToolError
 
 UA = "sakai-mcp (+https://github.com/jtayped/sakai-mcp)"
 CHECK_EVERY = 300
 
 
-class SakaiError(Exception):
+# A ToolError keeps its message on the way to the client; any other exception is reported as a crash.
+class SakaiError(ToolError):
     pass
 
 

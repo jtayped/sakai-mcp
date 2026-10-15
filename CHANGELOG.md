@@ -4,6 +4,10 @@ all notable changes are listed here. the format follows [keep a changelog](https
 
 ## [unreleased]
 
+### fixed
+
+- tool errors now reach the client with their message (for example "missing environment variable SAKAI_URL" or "the work is saved as a draft"), instead of only `Error executing tool <name>` (#4)
+
 ## [0.1.0] - 2026-10-14
 
 first release.

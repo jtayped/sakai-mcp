@@ -1,6 +1,10 @@
+import asyncio
+
 import pytest
+from mcp.server.mcpserver.exceptions import ToolError
 
 from sakai_mcp.client import SakaiError
+from sakai_mcp import server
 from sakai_mcp.server import (content_date, filename_from, iso, parse_due, same_host, submission_state,
                               text, trim_task, unique_path)
 
@@ -69,3 +73,10 @@ def test_submission_state():
 def test_trim_task_decodes_entities():
     t = trim_task({"userTaskId": 1, "description": "Metodolog&iacute;as &amp; co", "notes": None})
     assert (t["description"], t["notes"]) == ("Metodologías & co", None)
+
+
+def test_sakai_error_message_reaches_the_client(monkeypatch):
+    monkeypatch.setattr(server, "_client", None)
+    monkeypatch.delenv("SAKAI_URL", raising=False)
+    with pytest.raises(ToolError, match="^Error executing tool whoami: missing environment variable SAKAI_URL$"):
+        asyncio.run(server.mcp.call_tool("whoami", {}))
