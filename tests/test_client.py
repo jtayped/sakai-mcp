@@ -61,3 +61,18 @@ def test_forbidden_with_a_live_session_does_not_log_in_again(tmp_path):
     s.login = lambda: pytest.fail("logged in again on a permission error")
     with pytest.raises(SakaiError, match="HTTP 403"):
         s.request("GET", "/direct/site/x/memberships.json")
+
+
+def test_html_error_body_is_reduced_to_text(tmp_path):
+    page = "<!doctype html><html><head><style>h1 {color: red}</style></head><body><h1>HTTP Status 404</h1></body></html>"
+
+    def handler(req):
+        if req.url.path == "/direct/session/current.json":
+            return httpx.Response(200, json={"userId": "u1"})
+        return httpx.Response(404, text=page)
+
+    s = Sakai("https://sakai.example.edu", "user", "pw", tmp_path)
+    s.http._transport = httpx.MockTransport(handler)
+    with pytest.raises(SakaiError) as e:
+        s.request("GET", "/direct/assignment/item/x.json")
+    assert str(e.value) == "GET /direct/assignment/item/x.json: HTTP 404: HTTP Status 404"

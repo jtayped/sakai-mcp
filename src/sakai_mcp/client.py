@@ -8,10 +8,13 @@ re-checks /direct/session/current.json at most every CHECK_EVERY seconds instead
 """
 from __future__ import annotations
 
+import html
 import json
 import os
+import re
 import threading
 import time
+from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlsplit
 
@@ -25,6 +28,43 @@ CHECK_EVERY = 300
 # A ToolError keeps its message on the way to the client; any other exception is reported as a crash.
 class SakaiError(ToolError):
     pass
+
+
+class _Text(HTMLParser):
+    BLOCKS = {"p", "div", "br", "li", "tr", "h1", "h2", "h3", "h4", "h5", "h6"}
+
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.out: list[str] = []
+        self.skip = 0
+
+    def handle_starttag(self, tag, attrs):
+        if tag in ("script", "style"):
+            self.skip += 1
+        elif tag in self.BLOCKS:
+            self.out.append("\n")
+        elif tag == "a" and (href := dict(attrs).get("href")) and href.startswith("http"):
+            self.out.append(f"[{href}] ")
+
+    def handle_endtag(self, tag):
+        if tag in ("script", "style"):
+            self.skip -= 1
+        elif tag in self.BLOCKS:
+            self.out.append("\n")
+
+    def handle_data(self, data):
+        if not self.skip:
+            self.out.append(data)
+
+
+def text(markup: str | None) -> str:
+    if not markup:
+        return ""
+    p = _Text()
+    p.feed(markup)
+    p.close()
+    plain = html.unescape("".join(p.out)).replace("\xa0", " ")
+    return re.sub(r"\n\s*\n+", "\n", re.sub(r"[ \t]+", " ", plain)).strip()
 
 
 def parse_cookie_header(header: str) -> list[tuple[str, str]]:
@@ -127,7 +167,7 @@ class Sakai:
         if r.status_code == 404 and path.startswith("/api/"):
             raise SakaiError(f"{method} {path}: 404, this Sakai version probably has no such /api route")
         if not r.is_success:
-            raise SakaiError(f"{method} {path}: HTTP {r.status_code}: {r.text[:300]}")
+            raise SakaiError(f"{method} {path}: HTTP {r.status_code}: {text(r.text)[:300]}")
         return r
 
     def get_json(self, path: str, **params):
@@ -135,7 +175,7 @@ class Sakai:
         try:
             return r.json()
         except ValueError:
-            raise SakaiError(f"GET {path} did not return JSON: {r.text[:200]}") from None
+            raise SakaiError(f"GET {path} did not return JSON: {text(r.text)[:200]}") from None
 
     def version(self) -> str | None:
         """version.sakai from server-config, which some installs hide from non-admins."""

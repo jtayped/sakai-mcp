@@ -2,17 +2,15 @@
 from __future__ import annotations
 
 import html
-import re
 from datetime import datetime, timezone
 from email.message import Message
-from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urljoin, urlsplit
 
 from mcp.server.mcpserver import MCPServer
 from mcp.types import ToolAnnotations
 
-from .client import Sakai, SakaiError
+from .client import Sakai, SakaiError, text
 
 mcp = MCPServer(
     "sakai",
@@ -48,43 +46,6 @@ def parse_due(value: str) -> int:
     """ISO-8601 date or datetime to epoch milliseconds; naive values are taken as UTC."""
     dt = datetime.fromisoformat(value)
     return int((dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)).timestamp() * 1000)
-
-
-class _Text(HTMLParser):
-    BLOCKS = {"p", "div", "br", "li", "tr", "h1", "h2", "h3", "h4", "h5", "h6"}
-
-    def __init__(self):
-        super().__init__(convert_charrefs=True)
-        self.out: list[str] = []
-        self.skip = 0
-
-    def handle_starttag(self, tag, attrs):
-        if tag in ("script", "style"):
-            self.skip += 1
-        elif tag in self.BLOCKS:
-            self.out.append("\n")
-        elif tag == "a" and (href := dict(attrs).get("href")) and href.startswith("http"):
-            self.out.append(f"[{href}] ")
-
-    def handle_endtag(self, tag):
-        if tag in ("script", "style"):
-            self.skip -= 1
-        elif tag in self.BLOCKS:
-            self.out.append("\n")
-
-    def handle_data(self, data):
-        if not self.skip:
-            self.out.append(data)
-
-
-def text(markup: str | None) -> str:
-    if not markup:
-        return ""
-    p = _Text()
-    p.feed(markup)
-    p.close()
-    plain = html.unescape("".join(p.out)).replace("\xa0", " ")
-    return re.sub(r"\n\s*\n+", "\n", re.sub(r"[ \t]+", " ", plain)).strip()
 
 
 def content_date(value: str | None) -> str | None:
